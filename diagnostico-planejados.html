@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Diagnóstico gratuito de captação de clientes para lojas de móveis planejados. Descubra onde sua loja está perdendo oportunidades." />
+  <title>Diagnóstico de Captação · Lojas de Móveis Planejados — Igor Pacheco</title>
+  <style>
+    :root {
+      --bg: #0c0d10;
+      --bg-soft: #141519;
+      --surface: #16181d;
+      --surface-2: #1c1f26;
+      --border: #262932;
+      --border-strong: #343845;
+      --text: #f3f4f6;
+      --text-muted: #9aa0ad;
+      --text-faint: #6b7180;
+      --accent: #c9a24b;
+      --accent-soft: rgba(201, 162, 75, 0.12);
+      --accent-strong: #d9b665;
+      --green: #25d366;
+      --green-dark: #1da851;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(1100px 600px at 15% -10%, rgba(201, 162, 75, 0.08), transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, rgba(80, 110, 200, 0.06), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    /* ---------- Header ---------- */
+    header.site-header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(12, 13, 16, 0.7);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 0;
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: linear-gradient(145deg, var(--accent), #9a7a2e);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #14130d;
+      font-size: 17px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .brand-text h1 {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .brand-text span {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Intro ---------- */
+    .intro {
+      padding: 64px 0 48px;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 12.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+      border: 1px solid var(--border-strong);
+      background: var(--accent-soft);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+    }
+    .intro h2 {
+      font-size: clamp(28px, 5.2vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .intro h2 .hl { color: var(--accent-strong); }
+    .intro p {
+      color: var(--text-muted);
+      font-size: 16.5px;
+      margin-bottom: 18px;
+      max-width: 62ch;
+    }
+    .intro .lead { color: var(--text); }
+    .intro ul.dashes {
+      list-style: none;
+      margin: 0 0 18px;
+      padding: 0;
+    }
+    .intro ul.dashes li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .intro ul.dashes li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+    .intro .note {
+      font-size: 15px;
+      color: var(--text-faint);
+      border-left: 2px solid var(--border-strong);
+      padding-left: 16px;
+      margin-top: 28px;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 15px 26px;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(160deg, var(--accent-strong), var(--accent));
+      color: #14130d;
+      box-shadow: 0 12px 30px rgba(201, 162, 75, 0.22);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 16px 38px rgba(201, 162, 75, 0.3);
+      filter: brightness(1.04);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+    .btn-ghost:hover { background: var(--surface-2); border-color: #444a59; }
+    .btn-whatsapp {
+      background: linear-gradient(160deg, var(--green), var(--green-dark));
+      color: #06210f;
+      box-shadow: 0 12px 30px rgba(37, 211, 102, 0.18);
+      width: 100%;
+    }
+    .btn-whatsapp:hover { filter: brightness(1.05); box-shadow: 0 16px 38px rgba(37, 211, 102, 0.26); }
+    .btn-cta-intro { margin-top: 14px; }
+    .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+    /* ---------- Form card ---------- */
+    .form-section {
+      padding-bottom: 90px;
+    }
+    .form-card {
+      background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px 28px 26px;
+      display: none;
+    }
+    .form-card.is-visible { display: block; animation: rise 0.4s ease both; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* Progress */
+    .progress {
+      margin-bottom: 26px;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .progress-meta .label {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .progress-meta .pct {
+      font-size: 13px;
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+    .progress-bar {
+      height: 6px;
+      width: 100%;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    /* Steps */
+    .step { display: none; }
+    .step.is-active { display: block; animation: fade 0.3s ease both; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .step h3 {
+      font-size: 21px;
+      letter-spacing: -0.01em;
+      font-weight: 650;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .step .step-help {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+    .step .step-help.tight { margin-bottom: 18px; }
+
+    /* Options (radio) */
+    .options { display: flex; flex-direction: column; gap: 11px; }
+    .option {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 15px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.05s ease;
+    }
+    .option:hover { border-color: var(--border-strong); background: var(--surface-2); }
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+    .option .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border-strong);
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      transition: border-color 0.15s ease;
+    }
+    .option .dot::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-strong);
+      transform: scale(0);
+      transition: transform 0.15s ease;
+    }
+    .option .opt-label { font-size: 15.5px; color: var(--text); }
+    .option input:checked ~ .opt-label { color: #fff; }
+    .option:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .option:has(input:checked) .dot { border-color: var(--accent-strong); }
+    .option input:checked + .dot::after { transform: scale(1); }
+
+    /* Inline "Outro" text field */
+    .conditional-field {
+      margin-top: 4px;
+      display: none;
+    }
+    .conditional-field.is-open { display: block; animation: fade 0.25s ease both; }
+
+    /* Text inputs */
+    .fields { display: flex; flex-direction: column; gap: 16px; }
+    .field label {
+      display: block;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+      letter-spacing: 0.01em;
+    }
+    .field label .req { color: var(--accent-strong); }
+    .field input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 15.5px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 13px 15px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .field input::placeholder { color: var(--text-faint); }
+    .field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .field input.invalid {
+      border-color: #d65a5a;
+      box-shadow: 0 0 0 3px rgba(214, 90, 90, 0.14);
+    }
+    .field .error-msg {
+      display: none;
+      font-size: 12.5px;
+      color: #e08a8a;
+      margin-top: 6px;
+    }
+    .field .error-msg.show { display: block; }
+
+    .conditional-field textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      resize: vertical;
+      min-height: 64px;
+    }
+    .conditional-field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .step-error {
+      display: none;
+      font-size: 13.5px;
+      color: #e08a8a;
+      margin-top: 16px;
+    }
+    .step-error.show { display: block; }
+
+    /* Nav */
+    .step-nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .step-nav .btn { flex: 1; }
+    .step-nav .spacer { flex: 1; }
+
+    /* ---------- Confirmation ---------- */
+    .confirmation {
+      background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 30px 34px;
+      display: none;
+    }
+    .confirmation.is-visible { display: block; animation: rise 0.45s ease both; }
+    .check-badge {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+    }
+    .check-badge svg { width: 30px; height: 30px; stroke: var(--accent-strong); }
+    .confirmation h3 {
+      font-size: 26px;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .confirmation p {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 14px;
+      max-width: 60ch;
+    }
+    .confirmation .disqualified-note {
+      display: none;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      color: var(--text-muted);
+      font-size: 15px;
+      margin: 6px 0 20px;
+    }
+    .confirmation .disqualified-note.show { display: block; }
+    .whatsapp-block {
+      margin-top: 26px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .whatsapp-block p { margin-bottom: 16px; color: var(--text); }
+
+    /* ---------- Footer ---------- */
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      padding: 26px 0 40px;
+      text-align: center;
+    }
+    footer.site-footer p {
+      font-size: 13px;
+      color: var(--text-faint);
+    }
+
+    @media (max-width: 560px) {
+      .intro { padding: 44px 0 34px; }
+      .form-card, .confirmation { padding: 24px 18px; border-radius: 12px; }
+      .step-nav { flex-direction: column-reverse; }
+      .step-nav .spacer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand-mark">IP</div>
+      <div class="brand-text">
+        <h1>Igor Pacheco</h1>
+        <span>Aquisição · Performance</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== ETAPA 1 — INTRO ===================== -->
+    <section class="intro">
+      <div class="container">
+        <span class="eyebrow">Diagnóstico · Móveis Planejados</span>
+        <h2>Tenha um sistema de captação de clientes para a sua <span class="hl">loja de móveis planejados</span>.</h2>
+
+        <p class="lead">Em vez de depender só de indicação ou de anúncios cheios de curioso, vamos entender:</p>
+        <ul class="dashes">
+          <li>quanto sua loja poderia estar vendendo a mais</li>
+          <li>onde você está perdendo oportunidades hoje</li>
+          <li>e se faz sentido implementar um sistema de clientes na sua realidade.</li>
+        </ul>
+
+        <p>Em 3 a 5 minutos, você responde a algumas perguntas simples sobre a sua loja. Com isso, eu já consigo enxergar o cenário da sua captação hoje e te mostrar como funciona um sistema de clientes pensado pra realidade de planejados.</p>
+
+        <p class="note">Pensado para donos e gestores de lojas de móveis planejados que estão cansados de viver só de indicação e atender curioso no WhatsApp.</p>
+
+        <button class="btn btn-primary btn-cta-intro" id="startBtn">Quero clientes qualificados</button>
+      </div>
+    </section>
+
+    <!-- ===================== FORM (ETAPAS 2–6 + 8) ===================== -->
+    <section class="form-section">
+      <div class="container">
+        <div class="form-card" id="formCard">
+          <!-- Progress -->
+          <div class="progress">
+            <div class="progress-meta">
+              <span class="label" id="progressLabel">Etapa 1 de 6</span>
+              <span class="pct" id="progressPct">17%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
+
+          <form id="quizForm" novalidate>
+            <!-- ETAPA 2 -->
+            <div class="step is-active" data-step="0">
+              <h3>Qual é a sua relação com a loja de móveis planejados?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="relacao" value="Sou dono(a) ou sócio(a)" /><span class="dot"></span><span class="opt-label">Sou dono(a) ou sócio(a)</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Sou gestor(a) / responsável pela parte comercial" /><span class="dot"></span><span class="opt-label">Sou gestor(a) / responsável pela parte comercial</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Sou designer / vendedor" /><span class="dot"></span><span class="opt-label">Sou designer / vendedor</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Ainda não tenho loja, mas quero abrir" /><span class="dot"></span><span class="opt-label">Ainda não tenho loja, mas quero abrir</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Outro" /><span class="dot"></span><span class="opt-label">Outro</span></label>
+              </div>
+              <p class="step-error" data-error-for="relacao">Selecione uma opção para continuar.</p>
+            </div>
+
+            <!-- ETAPA 3 -->
+            <div class="step" data-step="1">
+              <h3>Hoje, como a maior parte dos clientes chega até você?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="origem" value="Quase só indicação" /><span class="dot"></span><span class="opt-label">Quase só indicação</span></label>
+                <label class="option"><input type="radio" name="origem" value="Indicação + Instagram / Google" /><span class="dot"></span><span class="opt-label">Indicação + Instagram / Google</span></label>
+                <label class="option"><input type="radio" name="origem" value="Maioria por anúncios (Meta / Google)" /><span class="dot"></span><span class="opt-label">Maioria por anúncios (Meta / Google)</span></label>
+                <label class="option"><input type="radio" name="origem" value="Tráfego de rua / parceria com construtora" /><span class="dot"></span><span class="opt-label">Tráfego de rua / parceria com construtora</span></label>
+                <label class="option"><input type="radio" name="origem" value="Outro" /><span class="dot"></span><span class="opt-label">Outro</span></label>
+              </div>
+              <p class="step-error" data-error-for="origem">Selecione uma opção para continuar.</p>
+            </div>
+
+            <!-- ETAPA 4 -->
+            <div class="step" data-step="2">
+              <h3>Qual é o faturamento médio mensal da sua loja de móveis planejados?</h3>
+              <p class="step-help tight">(não precisa ser exato, pode ser uma faixa aproximada)</p>
+              <div class="options">
+                <label class="option"><input type="radio" name="faturamento" value="Até R$ 50.000,00 por mês" /><span class="dot"></span><span class="opt-label">Até R$ 50.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="Entre R$ 50.000,00 e R$ 150.000,00 por mês" /><span class="dot"></span><span class="opt-label">Entre R$ 50.000,00 e R$ 150.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="Entre R$ 150.000,00 e R$ 300.000,00 por mês" /><span class="dot"></span><span class="opt-label">Entre R$ 150.000,00 e R$ 300.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="Acima de R$ 300.000,00 por mês" /><span class="dot"></span><span class="opt-label">Acima de R$ 300.000,00 por mês</span></label>
+              </div>
+              <p class="step-help" style="margin-top:18px;margin-bottom:0;">Essa informação é só pra entender o tamanho da operação e quais estratégias fazem mais sentido.</p>
+              <p class="step-error" data-error-for="faturamento">Selecione uma opção para continuar.</p>
+            </div>
+
+            <!-- ETAPA 5 -->
+            <div class="step" data-step="3">
+              <h3>Qual desses problemas mais incomoda na sua loja hoje?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="dor" value="Depender de indicação e nunca saber como vai ser o mês" /><span class="dot"></span><span class="opt-label">Depender de indicação e nunca saber como vai ser o mês</span></label>
+                <label class="option"><input type="radio" name="dor" value="Receber muita mensagem no Whats de curioso, que some depois do orçamento" /><span class="dot"></span><span class="opt-label">Receber muita mensagem no Whats de curioso, que some depois do orçamento</span></label>
+                <label class="option"><input type="radio" name="dor" value="Gastar com anúncio e ver pouco projeto fechado" /><span class="dot"></span><span class="opt-label">Gastar com anúncio e ver pouco projeto fechado</span></label>
+                <label class="option"><input type="radio" name="dor" value="Ter agenda comercial vazia em alguns períodos" /><span class="dot"></span><span class="opt-label">Ter agenda comercial vazia em alguns períodos</span></label>
+                <label class="option" id="dorOutroOption"><input type="radio" name="dor" value="Outro" /><span class="dot"></span><span class="opt-label">Outro (descrever)</span></label>
+              </div>
+              <div class="conditional-field" id="dorOutroField">
+                <textarea id="dorOutroText" name="dor_outro" placeholder="Conta rapidinho o que mais te incomoda hoje..."></textarea>
+              </div>
+              <p class="step-error" data-error-for="dor">Selecione uma opção para continuar.</p>
+            </div>
+
+            <!-- ETAPA 6 -->
+            <div class="step" data-step="4">
+              <h3>Sobre investimento em anúncios (Facebook, Instagram, Google), qual dessas opções mais parece sua realidade hoje?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir até R$ 1.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir até R$ 1.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir de R$ 1.000,00 a R$ 3.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir de R$ 1.000,00 a R$ 3.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir de R$ 3.000,00 a R$ 10.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir de R$ 3.000,00 a R$ 10.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir acima de R$ 10.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir acima de R$ 10.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Não estou disposto(a) a investir em anúncios no momento" data-disqualify="true" /><span class="dot"></span><span class="opt-label">Não estou disposto(a) a investir em anúncios no momento</span></label>
+              </div>
+              <p class="step-error" data-error-for="investimento">Selecione uma opção para continuar.</p>
+            </div>
+
+            <!-- ETAPA 8 -->
+            <div class="step" data-step="5">
+              <h3>Pra eu conseguir te retornar com a leitura do diagnóstico, preciso destes dados:</h3>
+              <p class="step-help">É por esses canais que eu vou te enviar a leitura do diagnóstico e, se fizer sentido, os próximos passos.</p>
+              <div class="fields">
+                <div class="field">
+                  <label for="nome">Nome <span class="req">*</span></label>
+                  <input type="text" id="nome" name="nome" autocomplete="name" placeholder="Seu nome completo" required />
+                  <p class="error-msg">Informe seu nome.</p>
+                </div>
+                <div class="field">
+                  <label for="whatsapp">WhatsApp <span class="req">*</span></label>
+                  <input type="tel" id="whatsapp" name="whatsapp" inputmode="numeric" autocomplete="tel" placeholder="(00) 00000-0000" required />
+                  <p class="error-msg">Informe um WhatsApp válido.</p>
+                </div>
+                <div class="field">
+                  <label for="email">E-mail <span class="req">*</span></label>
+                  <input type="email" id="email" name="email" autocomplete="email" placeholder="voce@email.com" required />
+                  <p class="error-msg">Informe um e-mail válido.</p>
+                </div>
+                <div class="field">
+                  <label for="instagram">Instagram da loja (arroba ou link) <span class="req">*</span></label>
+                  <input type="text" id="instagram" name="instagram" placeholder="@sualoja ou instagram.com/sualoja" required />
+                  <p class="error-msg">Informe o Instagram da loja.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" id="backBtn" style="display:none;">Voltar</button>
+              <span class="spacer" id="navSpacer"></span>
+              <button type="button" class="btn btn-primary" id="nextBtn">Próximo</button>
+              <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Enviar diagnóstico da minha loja</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ===================== ETAPA 9 — CONFIRMAÇÃO ===================== -->
+        <div class="confirmation" id="confirmation">
+          <div class="check-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <h3>Diagnóstico enviado.</h3>
+          <p>Recebi as informações da sua loja.</p>
+          <p>Vou analisar o que você respondeu e, se fizer sentido uma análise mais profunda, te retorno em até 24 horas pelo WhatsApp para alinhar os próximos passos.</p>
+          <p>Se eu entender que ainda não é o momento ideal para um sistema de captação completo, vou te indicar quais ajustes você já pode começar a fazer na sua loja de planejados.</p>
+
+          <div class="disqualified-note" id="disqualifiedNote">
+            Pelo que você respondeu sobre investimento em anúncios, hoje não parece ser o momento ideal para um sistema completo de captação.
+            Ainda assim, vou avaliar sua situação e, se fizer sentido, te indicar alguns ajustes que você já pode aplicar por conta própria.
+          </div>
+
+          <div class="whatsapp-block">
+            <p>Se você quiser acelerar esse retorno, pode me chamar agora no WhatsApp dizendo que já respondeu o diagnóstico:</p>
+            <a class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"
+               href="https://wa.me/5553999972327?text=Oi%20Igor,%20acabei%20de%20responder%20o%20diagn%C3%B3stico%20da%20minha%20loja%20de%20m%C3%B3veis%20planejados%20e%20quero%20entender%20os%20pr%C3%B3ximos%20passos.">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.617zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              Falar comigo no WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Igor Pacheco · Aquisição &amp; Performance para lojas de móveis planejados</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // ----- Estado -----
+      var state = {
+        current: 0,
+        desqualificado: false,
+        respostas: {}
+      };
+
+      // ----- Elementos -----
+      var startBtn = document.getElementById("startBtn");
+      var formCard = document.getElementById("formCard");
+      var form = document.getElementById("quizForm");
+      var steps = Array.prototype.slice.call(form.querySelectorAll(".step"));
+      var totalSteps = steps.length;
+
+      var backBtn = document.getElementById("backBtn");
+      var nextBtn = document.getElementById("nextBtn");
+      var submitBtn = document.getElementById("submitBtn");
+      var navSpacer = document.getElementById("navSpacer");
+
+      var progressLabel = document.getElementById("progressLabel");
+      var progressPct = document.getElementById("progressPct");
+      var progressFill = document.getElementById("progressFill");
+
+      var confirmation = document.getElementById("confirmation");
+      var disqualifiedNote = document.getElementById("disqualifiedNote");
+
+      // Campo condicional "Outro (descrever)" na Etapa 5
+      var dorOutroField = document.getElementById("dorOutroField");
+      var dorOutroText = document.getElementById("dorOutroText");
+
+      // ----- Intro: mostrar o formulário -----
+      startBtn.addEventListener("click", function () {
+        formCard.classList.add("is-visible");
+        updateUI();
+        // scroll automático até o início do form (bônus)
+        setTimeout(function () {
+          formCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 60);
+      });
+
+      // ----- Campo condicional da Etapa 5 -----
+      form.querySelectorAll('input[name="dor"]').forEach(function (input) {
+        input.addEventListener("change", function () {
+          var isOutro = this.value === "Outro" && this.checked;
+          dorOutroField.classList.toggle("is-open", isOutro);
+          if (isOutro) {
+            setTimeout(function () { dorOutroText.focus(); }, 50);
+          }
+        });
+      });
+
+      // ----- Esconder erro ao selecionar uma opção -----
+      form.querySelectorAll('input[type="radio"]').forEach(function (input) {
+        input.addEventListener("change", function () {
+          var err = form.querySelector('.step-error[data-error-for="' + this.name + '"]');
+          if (err) err.classList.remove("show");
+        });
+      });
+
+      // ----- Máscara de telefone brasileiro -----
+      var whatsappInput = document.getElementById("whatsapp");
+      whatsappInput.addEventListener("input", function () {
+        var d = this.value.replace(/\D/g, "").slice(0, 11);
+        var out = "";
+        if (d.length > 0) out = "(" + d.slice(0, 2);
+        if (d.length >= 2) out += ") ";
+        if (d.length > 2) {
+          if (d.length <= 6) {
+            out += d.slice(2);
+          } else if (d.length <= 10) {
+            // fixo: (00) 0000-0000
+            out += d.slice(2, 6) + "-" + d.slice(6);
+          } else {
+            // celular: (00) 00000-0000
+            out += d.slice(2, 7) + "-" + d.slice(7);
+          }
+        }
+        this.value = out;
+      });
+
+      // ----- Navegação -----
+      nextBtn.addEventListener("click", function () {
+        if (!validateStep(state.current)) return;
+        saveStep(state.current);
+        if (state.current < totalSteps - 1) {
+          goTo(state.current + 1);
+        }
+      });
+
+      backBtn.addEventListener("click", function () {
+        if (state.current > 0) goTo(state.current - 1);
+      });
+
+      function goTo(index) {
+        steps[state.current].classList.remove("is-active");
+        state.current = index;
+        steps[state.current].classList.add("is-active");
+        updateUI();
+        formCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function updateUI() {
+        var isFirst = state.current === 0;
+        var isLast = state.current === totalSteps - 1;
+
+        backBtn.style.display = isFirst ? "none" : "inline-flex";
+        navSpacer.style.display = isFirst ? "block" : "none";
+        nextBtn.style.display = isLast ? "none" : "inline-flex";
+        submitBtn.style.display = isLast ? "inline-flex" : "none";
+
+        var stepNumber = state.current + 1;
+        var pct = Math.round((stepNumber / totalSteps) * 100);
+        progressLabel.textContent = "Etapa " + stepNumber + " de " + totalSteps;
+        progressPct.textContent = pct + "%";
+        progressFill.style.width = pct + "%";
+      }
+
+      // ----- Validação -----
+      function validateStep(index) {
+        var step = steps[index];
+        var radios = step.querySelectorAll('input[type="radio"]');
+
+        if (radios.length) {
+          var name = radios[0].name;
+          var checked = step.querySelector('input[name="' + name + '"]:checked');
+          if (!checked) {
+            var err = step.querySelector('.step-error[data-error-for="' + name + '"]');
+            if (err) err.classList.add("show");
+            return false;
+          }
+          return true;
+        }
+
+        // Etapa de contato (inputs de texto)
+        var inputs = step.querySelectorAll("input[required]");
+        var ok = true;
+        inputs.forEach(function (input) {
+          var valid = input.value.trim() !== "";
+          if (valid && input.type === "email") {
+            valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+          }
+          if (valid && input.id === "whatsapp") {
+            valid = input.value.replace(/\D/g, "").length >= 10;
+          }
+          toggleFieldError(input, !valid);
+          if (!valid) ok = false;
+        });
+        return ok;
+      }
+
+      function toggleFieldError(input, hasError) {
+        var field = input.closest(".field");
+        input.classList.toggle("invalid", hasError);
+        var msg = field ? field.querySelector(".error-msg") : null;
+        if (msg) msg.classList.toggle("show", hasError);
+      }
+
+      // Revalidar campos de contato ao digitar
+      form.querySelectorAll(".field input").forEach(function (input) {
+        input.addEventListener("input", function () {
+          if (input.classList.contains("invalid")) {
+            toggleFieldError(input, false);
+          }
+        });
+      });
+
+      // ----- Salvar respostas + regra de desqualificação -----
+      function saveStep(index) {
+        var step = steps[index];
+        var checked = step.querySelector('input[type="radio"]:checked');
+        if (checked) {
+          state.respostas[checked.name] = checked.value;
+          // Regra Etapa 6: desqualificação
+          if (checked.name === "investimento") {
+            state.desqualificado = checked.getAttribute("data-disqualify") === "true";
+          }
+          // Texto do "Outro" na Etapa 5
+          if (checked.name === "dor" && checked.value === "Outro") {
+            state.respostas.dor_outro = dorOutroText.value.trim();
+          }
+        }
+      }
+
+      // ----- Envio (somente front-end; pronto para plugar backend) -----
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!validateStep(state.current)) return;
+        saveStep(state.current);
+
+        // Coletar dados de contato
+        state.respostas.nome = document.getElementById("nome").value.trim();
+        state.respostas.whatsapp = document.getElementById("whatsapp").value.trim();
+        state.respostas.email = document.getElementById("email").value.trim();
+        state.respostas.instagram = document.getElementById("instagram").value.trim();
+        state.respostas.desqualificado = state.desqualificado;
+
+        // === PONTO DE INTEGRAÇÃO COM BACKEND ===
+        // Aqui você pode enviar `payload` para sua API, webhook, planilha, CRM, etc.
+        var payload = state.respostas;
+        console.log("Diagnóstico (payload pronto para envio):", payload);
+        // Ex.: fetch("/api/diagnostico", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+        // =======================================
+
+        showConfirmation();
+      });
+
+      function showConfirmation() {
+        formCard.classList.remove("is-visible");
+        if (state.desqualificado) {
+          disqualifiedNote.classList.add("show");
+        }
+        confirmation.classList.add("is-visible");
+        confirmation.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // ----- Ano no rodapé -----
+      document.getElementById("year").textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
