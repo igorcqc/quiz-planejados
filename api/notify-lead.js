@@ -1,6 +1,6 @@
 // Handler do envio final do quiz. Dispara, em paralelo e de forma independente:
 //   1) gravação no Supabase (histórico completo + tracking jsonb + lead_status)
-//   2) notificação no WhatsApp do Igor via CallMeBot
+//   2) notificação instantânea no Telegram do Igor
 //   3) notificação por e-mail via Resend (canal redundante)
 //   4) evento de conversão pro Meta via CAPI:
 //        - "Lead" quando o lead é qualificado (evento de otimização)
@@ -9,7 +9,7 @@
 // Falha em um canal não impede os outros.
 //
 // Variáveis de ambiente necessárias no projeto Vercel:
-//   CALLMEBOT_PHONE, CALLMEBOT_APIKEY               -> WhatsApp (CallMeBot)
+//   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID            -> notificação instantânea no Telegram
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY         -> gravação no banco (tabela "leads")
 //   RESEND_API_KEY, LEAD_NOTIFY_EMAIL               -> e-mail (Resend)
 //   META_PIXEL_ID, META_CAPI_ACCESS_TOKEN           -> Meta Conversions API
@@ -38,9 +38,9 @@ export default async function handler(req, res) {
     "Qualificado: " + (data.desqualificado ? "Não" : "Sim")
   ];
 
-  const [supabaseResult, whatsappResult, emailResult, metaResult] = await Promise.allSettled([
+  const [supabaseResult, telegramResult, emailResult, metaResult] = await Promise.allSettled([
     saveToSupabase(data),
-    notifyWhatsapp(resumoLinhas),
+    notifyTelegram(resumoLinhas, data),
     notifyEmail(resumoLinhas, data),
     sendLeadCapi(data, req)
   ]);
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
   res.status(200).json({
     ok: true,
     supabase: settledToResult(supabaseResult),
-    whatsapp: settledToResult(whatsappResult),
+    telegram: settledToResult(telegramResult),
     email: settledToResult(emailResult),
     meta_capi: settledToResult(metaResult)
   });
@@ -98,23 +98,31 @@ async function saveToSupabase(data) {
   return "lead salvo";
 }
 
-async function notifyWhatsapp(resumoLinhas) {
-  const phone = process.env.CALLMEBOT_PHONE;
-  const apikey = process.env.CALLMEBOT_APIKEY;
-  if (!phone || !apikey) throw new Error("CALLMEBOT_PHONE / CALLMEBOT_APIKEY ausentes");
+async function notifyTelegram(resumoLinhas, data) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) throw new Error("TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID ausentes");
 
-  const texto = ["Novo lead: Diagnóstico de Móveis Planejados", ""].concat(resumoLinhas).join("\n");
-  const url =
-    "https://api.callmebot.com/whatsapp.php?phone=" + encodeURIComponent(phone) +
-    "&text=" + encodeURIComponent(texto) +
-    "&apikey=" + encodeURIComponent(apikey);
+  const cabecalho = data.desqualificado
+    ? "🟡 Novo lead (desqualificado) — Diagnóstico Planejados"
+    : "🟢 Novo lead — Diagnóstico Planejados";
+  const texto = [cabecalho, ""].concat(resumoLinhas).join("\n");
 
-  const resp = await fetch(url);
+  const resp = await fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: texto,
+      disable_web_page_preview: true
+    })
+  });
+
   const body = await resp.text();
-  if (/error/i.test(body) || /invalid/i.test(body)) {
-    throw new Error("CallMeBot retornou erro: " + body);
+  if (!resp.ok) {
+    throw new Error("Telegram respondeu " + resp.status + ": " + body);
   }
-  return body;
+  return "notificado no Telegram";
 }
 
 async function notifyEmail(resumoLinhas, data) {
