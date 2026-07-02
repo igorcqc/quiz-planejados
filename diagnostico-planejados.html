@@ -51,48 +51,6 @@
       padding: 0 22px;
     }
 
-    /* ---------- Header ---------- */
-    header.site-header {
-      display: none;
-      border-bottom: 1px solid var(--border);
-      background: rgba(12, 13, 16, 0.7);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-    header.site-header.is-visible { display: block; }
-    .header-inner {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 0;
-    }
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 11px;
-      background: linear-gradient(145deg, var(--accent), #9a7a2e);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      color: #14130d;
-      font-size: 17px;
-      letter-spacing: 0.5px;
-      flex-shrink: 0;
-    }
-    .brand-text h1 {
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .brand-text span {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
     /* ---------- Intro ---------- */
     .intro {
       min-height: 100svh;
@@ -451,17 +409,6 @@
 </head>
 <body>
 
-  <!-- ===================== HEADER ===================== -->
-  <header class="site-header" id="siteHeader">
-    <div class="container header-inner">
-      <div class="brand-mark">IP</div>
-      <div class="brand-text">
-        <h1>Igor Pacheco</h1>
-        <span>Aquisição · Performance</span>
-      </div>
-    </div>
-  </header>
-
   <main>
     <!-- ===================== ETAPA 1 — INTRO ===================== -->
     <section class="intro" id="introSection">
@@ -641,7 +588,6 @@
       };
 
       // ----- Elementos -----
-      var siteHeader = document.getElementById("siteHeader");
       var introSection = document.getElementById("introSection");
       var startBtn = document.getElementById("startBtn");
       var formCard = document.getElementById("formCard");
@@ -671,7 +617,6 @@
       // ----- Intro: esconder a etapa 1 e mostrar o formulário -----
       startBtn.addEventListener("click", function () {
         introSection.style.display = "none";
-        siteHeader.classList.add("is-visible");
         formCard.classList.add("is-visible");
         window.scrollTo(0, 0);
         updateUI();
