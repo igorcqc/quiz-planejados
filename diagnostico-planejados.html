@@ -475,6 +475,75 @@
     }
     .result .result-paras p strong { color: var(--text); font-weight: 600; }
 
+    /* ---------- Oferta (tela de resultado) ---------- */
+    .offer {
+      display: none;
+      margin: 24px 0 4px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .offer.is-visible { display: block; animation: fade 0.4s ease both; }
+    .offer-title {
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .offer-lead {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .offer-lead strong { color: var(--text); font-weight: 600; }
+    .offer-list {
+      list-style: none;
+      margin: 0 0 18px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .offer-list li {
+      position: relative;
+      padding-left: 26px;
+      color: var(--text);
+      font-size: 14.5px;
+    }
+    .offer-list li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 3px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+    }
+    .offer-list li::after {
+      content: "";
+      position: absolute;
+      left: 5px; top: 6px;
+      width: 6px; height: 3px;
+      border-left: 1.6px solid var(--accent-strong);
+      border-bottom: 1.6px solid var(--accent-strong);
+      transform: rotate(-45deg);
+    }
+    .offer-guarantee {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+    .offer-guarantee strong { display: block; color: var(--accent-strong); font-size: 14px; margin-bottom: 5px; }
+    .offer-guarantee span { color: var(--text-muted); font-size: 14.5px; }
+    .offer-scarcity {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+    .offer-scarcity strong { color: var(--text); }
+
     /* ---------- Footer ---------- */
     footer.site-footer {
       border-top: 1px solid var(--border);
@@ -635,17 +704,34 @@
             <div class="result-paras" id="resultParas"></div>
           </div>
 
+          <!-- Oferta (só para leads qualificados) -->
+          <div class="offer" id="offerBlock">
+            <h4 class="offer-title">Como a gente resolve isso na sua loja</h4>
+            <p class="offer-lead">Eu monto e opero um <strong>sistema de captação completo</strong> pra sua loja de planejados: anúncios, página de captura e qualificação de curioso — do clique até o projeto chegar na sua mesa. Você foca em fechar; trazer cliente qualificado é comigo.</p>
+            <ul class="offer-list">
+              <li>Anúncios no Meta e Google criados e gerenciados por mim</li>
+              <li>Funil de captação que filtra curioso e traz quem quer comprar</li>
+              <li>Qualificação pra sua equipe só falar com quem tem perfil</li>
+              <li>Otimização e acompanhamento toda semana</li>
+            </ul>
+            <div class="offer-guarantee">
+              <strong>🛡️ Minha garantia</strong>
+              <span>Fechamos 3 meses. Se até o fim do 2º mês você não tiver fechado pelo menos 3 projetos vindos da captação que eu montar, o 3º mês é por minha conta.</span>
+            </div>
+            <p class="offer-scarcity">Estou pegando só <strong>3 lojas por mês</strong> pra garantir resultado em cada uma.</p>
+          </div>
+
           <div class="disqualified-note" id="disqualifiedNote">
             Pelo que você respondeu, hoje não parece ser o momento ideal para um sistema completo de captação por anúncios.
             Ainda assim, dá pra melhorar bastante o que você já tem, e é isso que eu vou te mostrar.
           </div>
 
           <div class="whatsapp-block">
-            <p id="whatsappPitch">Quer o diagnóstico completo e o próximo passo pra sua loja? Me chama agora no WhatsApp:</p>
-            <a class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"
-               href="https://wa.me/5553999972327?text=Oi%20Igor,%20acabei%20de%20responder%20o%20diagn%C3%B3stico%20da%20minha%20loja%20de%20m%C3%B3veis%20planejados%20e%20quero%20entender%20os%20pr%C3%B3ximos%20passos.">
+            <p id="whatsappPitch">Quer montar esse sistema na sua loja? Me chama no WhatsApp que a gente agenda sua call de diagnóstico gratuita:</p>
+            <a class="btn btn-whatsapp" id="whatsappBtn" target="_blank" rel="noopener noreferrer"
+               href="https://wa.me/5553999972327?text=Oi%20Igor,%20acabei%20de%20responder%20o%20diagn%C3%B3stico%20da%20minha%20loja%20de%20m%C3%B3veis%20planejados%20e%20quero%20agendar%20minha%20call%20de%20diagn%C3%B3stico.">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.617zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-              Falar com o Igor no WhatsApp
+              <span id="whatsappBtnLabel">Agendar minha call no WhatsApp</span>
             </a>
             <p class="secondary-note">Se preferir, também te retorno em até 24h pelo número que você deixou.</p>
           </div>
@@ -1107,9 +1193,22 @@
           box.appendChild(p);
         });
 
+        var offerBlock = document.getElementById("offerBlock");
+        var pitch = document.getElementById("whatsappPitch");
+        var btnLabel = document.getElementById("whatsappBtnLabel");
+
         if (state.desqualificado) {
-          document.getElementById("whatsappPitch").textContent =
+          // Desqualificado: não mostra a oferta completa, vai numa abordagem suave.
+          offerBlock.classList.remove("is-visible");
+          pitch.textContent =
             "Mesmo que anúncio não seja pra agora, dá pra melhorar bastante o que você já tem. Me chama no WhatsApp que eu te aponto os primeiros ajustes:";
+          btnLabel.textContent = "Falar com o Igor no WhatsApp";
+        } else {
+          // Qualificado: mostra a oferta + convida pra call de diagnóstico.
+          offerBlock.classList.add("is-visible");
+          pitch.textContent =
+            "Quer montar esse sistema na sua loja? Me chama no WhatsApp que a gente agenda sua call de diagnóstico gratuita:";
+          btnLabel.textContent = "Agendar minha call no WhatsApp";
         }
       }
 
