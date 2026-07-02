@@ -409,6 +409,65 @@
       border-top: 1px solid var(--border);
     }
     .whatsapp-block p { margin-bottom: 16px; color: var(--text); }
+    .whatsapp-block .secondary-note {
+      margin-top: 14px;
+      margin-bottom: 0;
+      font-size: 13px;
+      color: var(--text-faint);
+      text-align: center;
+    }
+
+    /* ---------- Prova social (intro) ---------- */
+    .proof {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 26px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .proof strong { color: var(--text); font-weight: 600; }
+    .proof .proof-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.15);
+      flex-shrink: 0;
+    }
+
+    /* ---------- Bloco de resultado instantâneo ---------- */
+    .result { margin-bottom: 4px; }
+    .result-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+      margin-bottom: 14px;
+    }
+    .perfil-badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #14130d;
+      background: linear-gradient(160deg, var(--accent-strong), var(--accent));
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .result h3 {
+      font-size: 24px;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .result .result-paras p {
+      color: var(--text-muted);
+      font-size: 15.5px;
+      margin-bottom: 13px;
+      max-width: 60ch;
+    }
+    .result .result-paras p strong { color: var(--text); font-weight: 600; }
 
     /* ---------- Footer ---------- */
     footer.site-footer {
@@ -437,9 +496,14 @@
       <div class="container intro-inner">
         <span class="eyebrow">Diagnóstico Gratuito · Móveis Planejados</span>
         <h2>Quer mais projetos fechados e menos curioso no WhatsApp?<br />Comece pelo <span class="hl">diagnóstico</span> da sua loja de planejados.</h2>
-        <p class="lead">Responda 6 perguntas rápidas e descubra quanto dinheiro está ficando na mesa na sua loja, e se faz sentido montar um sistema que traz projetos fechados todo mês, em vez de só orçamento que some.</p>
+        <p class="lead">Responda 6 perguntas rápidas e receba na hora um diagnóstico da captação da sua loja, mais o caminho pra ter projeto fechado todo mês, em vez de só orçamento que some.</p>
         <button class="btn btn-primary btn-cta-intro" id="startBtn">Quero clientes qualificados</button>
-        <p class="note">Leva menos de 1 minuto.</p>
+        <p class="note">Leva menos de 1 minuto. Sem compromisso.</p>
+        <!-- PROVA SOCIAL: troque o "+30" pelo número real de lojas atendidas -->
+        <div class="proof">
+          <span class="proof-dot"></span>
+          <span><strong>+30 lojas</strong> de móveis planejados já atendidas</span>
+        </div>
       </div>
     </section>
 
@@ -457,22 +521,25 @@
           </div>
 
           <form id="quizForm" novalidate>
-            <!-- ETAPA 2 -->
-            <div class="step is-active" data-step="0">
-              <h3>Qual é a sua relação com a loja de móveis planejados?</h3>
+            <!-- ETAPA 1 — DOR (abre com identificação) -->
+            <div class="step is-active" data-step="0" id="stepDor">
+              <h3>O que mais te incomoda na sua loja de planejados hoje?</h3>
               <div class="options">
-                <label class="option"><input type="radio" name="relacao" value="Sou dono(a) ou sócio(a)" /><span class="dot"></span><span class="opt-label">Sou dono(a) ou sócio(a)</span></label>
-                <label class="option"><input type="radio" name="relacao" value="Sou gestor(a) / responsável pela parte comercial" /><span class="dot"></span><span class="opt-label">Sou gestor(a) / responsável pela parte comercial</span></label>
-                <label class="option"><input type="radio" name="relacao" value="Sou designer / vendedor" /><span class="dot"></span><span class="opt-label">Sou designer / vendedor</span></label>
-                <label class="option"><input type="radio" name="relacao" value="Ainda não tenho loja, mas quero abrir" /><span class="dot"></span><span class="opt-label">Ainda não tenho loja, mas quero abrir</span></label>
-                <label class="option"><input type="radio" name="relacao" value="Outro" /><span class="dot"></span><span class="opt-label">Outro</span></label>
+                <label class="option"><input type="radio" name="dor" value="Dependo demais de indicação" /><span class="dot"></span><span class="opt-label">Dependo demais de indicação</span></label>
+                <label class="option"><input type="radio" name="dor" value="Recebo muito curioso que some no orçamento" /><span class="dot"></span><span class="opt-label">Recebo muito curioso que some no orçamento</span></label>
+                <label class="option"><input type="radio" name="dor" value="Gasto com anúncio e fecho poucos projetos" /><span class="dot"></span><span class="opt-label">Gasto com anúncio e fecho poucos projetos</span></label>
+                <label class="option"><input type="radio" name="dor" value="Minha agenda comercial oscila muito" /><span class="dot"></span><span class="opt-label">Minha agenda comercial oscila muito</span></label>
+                <label class="option" id="dorOutroOption"><input type="radio" name="dor" value="Outro" /><span class="dot"></span><span class="opt-label">Outro (descrever)</span></label>
               </div>
-              <p class="step-error" data-error-for="relacao">Selecione uma opção para continuar.</p>
+              <div class="conditional-field" id="dorOutroField">
+                <textarea id="dorOutroText" name="dor_outro" placeholder="Conta rapidinho o que mais te incomoda hoje..."></textarea>
+              </div>
+              <p class="step-error" data-error-for="dor">Selecione uma opção para continuar.</p>
             </div>
 
-            <!-- ETAPA 3 -->
+            <!-- ETAPA 2 — ORIGEM -->
             <div class="step" data-step="1">
-              <h3>Hoje, como a maior parte dos clientes chega até você?</h3>
+              <h3>Como a maior parte dos seus clientes chega até você hoje?</h3>
               <div class="options">
                 <label class="option"><input type="radio" name="origem" value="Quase só indicação" /><span class="dot"></span><span class="opt-label">Quase só indicação</span></label>
                 <label class="option"><input type="radio" name="origem" value="Indicação + Instagram / Google" /><span class="dot"></span><span class="opt-label">Indicação + Instagram / Google</span></label>
@@ -483,53 +550,50 @@
               <p class="step-error" data-error-for="origem">Selecione uma opção para continuar.</p>
             </div>
 
-            <!-- ETAPA 4 -->
+            <!-- ETAPA 3 — FATURAMENTO -->
             <div class="step" data-step="2">
-              <h3>Qual é o faturamento médio mensal da sua loja de móveis planejados?</h3>
-              <p class="step-help tight">(não precisa ser exato, pode ser uma faixa aproximada)</p>
+              <h3>Qual o faturamento médio mensal da sua loja hoje?</h3>
+              <p class="step-help tight">Pode ser uma faixa aproximada.</p>
               <div class="options">
-                <label class="option"><input type="radio" name="faturamento" value="Até R$ 50.000,00 por mês" /><span class="dot"></span><span class="opt-label">Até R$ 50.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="faturamento" value="Entre R$ 50.000,00 e R$ 150.000,00 por mês" /><span class="dot"></span><span class="opt-label">Entre R$ 50.000,00 e R$ 150.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="faturamento" value="Entre R$ 150.000,00 e R$ 300.000,00 por mês" /><span class="dot"></span><span class="opt-label">Entre R$ 150.000,00 e R$ 300.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="faturamento" value="Acima de R$ 300.000,00 por mês" /><span class="dot"></span><span class="opt-label">Acima de R$ 300.000,00 por mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="Até R$ 50 mil/mês" /><span class="dot"></span><span class="opt-label">Até R$ 50 mil/mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="R$ 50 mil a R$ 150 mil/mês" /><span class="dot"></span><span class="opt-label">R$ 50 mil a R$ 150 mil/mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="R$ 150 mil a R$ 300 mil/mês" /><span class="dot"></span><span class="opt-label">R$ 150 mil a R$ 300 mil/mês</span></label>
+                <label class="option"><input type="radio" name="faturamento" value="Acima de R$ 300 mil/mês" /><span class="dot"></span><span class="opt-label">Acima de R$ 300 mil/mês</span></label>
               </div>
-              <p class="step-help" style="margin-top:18px;margin-bottom:0;">Essa informação é só pra entender o tamanho da operação e quais estratégias fazem mais sentido.</p>
               <p class="step-error" data-error-for="faturamento">Selecione uma opção para continuar.</p>
             </div>
 
-            <!-- ETAPA 5 -->
-            <div class="step" data-step="3">
-              <h3>Qual desses problemas mais incomoda na sua loja hoje?</h3>
+            <!-- ETAPA 4 — INVESTIMENTO (qualificação) -->
+            <div class="step" data-step="3" id="stepInvestimento">
+              <h3>Quanto você consegue investir em anúncios por mês hoje?</h3>
+              <p class="step-help tight">Facebook, Instagram e Google.</p>
               <div class="options">
-                <label class="option"><input type="radio" name="dor" value="Depender de indicação e nunca saber como vai ser o mês" /><span class="dot"></span><span class="opt-label">Depender de indicação e nunca saber como vai ser o mês</span></label>
-                <label class="option"><input type="radio" name="dor" value="Receber muita mensagem no Whats de curioso, que some depois do orçamento" /><span class="dot"></span><span class="opt-label">Receber muita mensagem no Whats de curioso, que some depois do orçamento</span></label>
-                <label class="option"><input type="radio" name="dor" value="Gastar com anúncio e ver pouco projeto fechado" /><span class="dot"></span><span class="opt-label">Gastar com anúncio e ver pouco projeto fechado</span></label>
-                <label class="option"><input type="radio" name="dor" value="Ter agenda comercial vazia em alguns períodos" /><span class="dot"></span><span class="opt-label">Ter agenda comercial vazia em alguns períodos</span></label>
-                <label class="option" id="dorOutroOption"><input type="radio" name="dor" value="Outro" /><span class="dot"></span><span class="opt-label">Outro (descrever)</span></label>
-              </div>
-              <div class="conditional-field" id="dorOutroField">
-                <textarea id="dorOutroText" name="dor_outro" placeholder="Conta rapidinho o que mais te incomoda hoje..."></textarea>
-              </div>
-              <p class="step-error" data-error-for="dor">Selecione uma opção para continuar.</p>
-            </div>
-
-            <!-- ETAPA 6 -->
-            <div class="step" data-step="4">
-              <h3>Sobre investimento em anúncios (Facebook, Instagram, Google), qual dessas opções mais parece sua realidade hoje?</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir até R$ 1.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir até R$ 1.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir de R$ 1.000,00 a R$ 3.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir de R$ 1.000,00 a R$ 3.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir de R$ 3.000,00 a R$ 10.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir de R$ 3.000,00 a R$ 10.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="investimento" value="Estou disposto(a) a investir acima de R$ 10.000,00 por mês" /><span class="dot"></span><span class="opt-label">Estou disposto(a) a investir acima de R$ 10.000,00 por mês</span></label>
-                <label class="option"><input type="radio" name="investimento" value="Não estou disposto(a) a investir em anúncios no momento" data-disqualify="true" /><span class="dot"></span><span class="opt-label">Não estou disposto(a) a investir em anúncios no momento</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Até R$ 1.000/mês" /><span class="dot"></span><span class="opt-label">Até R$ 1.000/mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="R$ 1.000 a R$ 3.000/mês" /><span class="dot"></span><span class="opt-label">R$ 1.000 a R$ 3.000/mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="R$ 3.000 a R$ 10.000/mês" /><span class="dot"></span><span class="opt-label">R$ 3.000 a R$ 10.000/mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Acima de R$ 10.000/mês" /><span class="dot"></span><span class="opt-label">Acima de R$ 10.000/mês</span></label>
+                <label class="option"><input type="radio" name="investimento" value="Não quero investir em anúncios agora" data-disqualify="true" /><span class="dot"></span><span class="opt-label">Não quero investir em anúncios agora</span></label>
               </div>
               <p class="step-error" data-error-for="investimento">Selecione uma opção para continuar.</p>
             </div>
 
-            <!-- ETAPA 8 -->
+            <!-- ETAPA 5 — RELAÇÃO -->
+            <div class="step" data-step="4">
+              <h3>Por último: qual é a sua relação com a loja?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="relacao" value="Sou dono(a) ou sócio(a)" /><span class="dot"></span><span class="opt-label">Sou dono(a) ou sócio(a)</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Sou gestor(a) / responsável pela parte comercial" /><span class="dot"></span><span class="opt-label">Sou gestor(a) / responsável pela parte comercial</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Sou designer / vendedor" /><span class="dot"></span><span class="opt-label">Sou designer / vendedor</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Ainda não tenho loja, mas quero abrir" /><span class="dot"></span><span class="opt-label">Ainda não tenho loja, mas quero abrir</span></label>
+                <label class="option"><input type="radio" name="relacao" value="Outro" /><span class="dot"></span><span class="opt-label">Outro</span></label>
+              </div>
+              <p class="step-error" data-error-for="relacao">Selecione uma opção para continuar.</p>
+            </div>
+
+            <!-- ETAPA 6 — CONTATO (só nome + WhatsApp) -->
             <div class="step" data-step="5">
-              <h3>Pra eu conseguir te retornar com a leitura do diagnóstico, preciso destes dados:</h3>
-              <p class="step-help">É por esses canais que eu vou te enviar a leitura do diagnóstico e, se fizer sentido, os próximos passos.</p>
+              <h3>Seu diagnóstico está pronto! Pra onde eu envio?</h3>
+              <p class="step-help">Vou te chamar no WhatsApp com a leitura completa. Sem spam.</p>
               <div class="fields">
                 <div class="field">
                   <label for="nome">Nome <span class="req">*</span></label>
@@ -541,16 +605,6 @@
                   <input type="tel" id="whatsapp" name="whatsapp" inputmode="numeric" autocomplete="tel" placeholder="(00) 00000-0000" required />
                   <p class="error-msg">Informe um WhatsApp válido.</p>
                 </div>
-                <div class="field">
-                  <label for="email">E-mail <span class="req">*</span></label>
-                  <input type="email" id="email" name="email" autocomplete="email" placeholder="voce@email.com" required />
-                  <p class="error-msg">Informe um e-mail válido.</p>
-                </div>
-                <div class="field">
-                  <label for="instagram">Instagram da loja (arroba ou link) <span class="req">*</span></label>
-                  <input type="text" id="instagram" name="instagram" placeholder="@sualoja ou instagram.com/sualoja" required />
-                  <p class="error-msg">Informe o Instagram da loja.</p>
-                </div>
               </div>
             </div>
 
@@ -559,33 +613,34 @@
               <button type="button" class="btn btn-ghost" id="backBtn" style="display:none;">Voltar</button>
               <span class="spacer" id="navSpacer"></span>
               <button type="button" class="btn btn-primary" id="nextBtn">Próximo</button>
-              <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Enviar diagnóstico da minha loja</button>
+              <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Ver meu diagnóstico</button>
             </div>
           </form>
         </div>
 
         <!-- ===================== ETAPA 9 — CONFIRMAÇÃO ===================== -->
         <div class="confirmation" id="confirmation">
-          <div class="check-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <!-- Resultado instantâneo personalizado (preenchido via JS) -->
+          <div class="result">
+            <span class="result-eyebrow">Seu diagnóstico rápido</span>
+            <span class="perfil-badge" id="perfilBadge"></span>
+            <h3 id="resultTitulo"></h3>
+            <div class="result-paras" id="resultParas"></div>
           </div>
-          <h3>Diagnóstico enviado.</h3>
-          <p>Recebi as informações da sua loja.</p>
-          <p>Vou analisar o que você respondeu e, se fizer sentido uma análise mais profunda, te retorno em até 24 horas pelo WhatsApp para alinhar os próximos passos.</p>
-          <p>Se eu entender que ainda não é o momento ideal para um sistema de captação completo, vou te indicar quais ajustes você já pode começar a fazer na sua loja de planejados.</p>
 
           <div class="disqualified-note" id="disqualifiedNote">
-            Pelo que você respondeu sobre investimento em anúncios, hoje não parece ser o momento ideal para um sistema completo de captação.
-            Ainda assim, vou avaliar sua situação e, se fizer sentido, te indicar alguns ajustes que você já pode aplicar por conta própria.
+            Pelo que você respondeu, hoje não parece ser o momento ideal para um sistema completo de captação por anúncios.
+            Ainda assim, dá pra melhorar bastante o que você já tem, e é isso que eu vou te mostrar.
           </div>
 
           <div class="whatsapp-block">
-            <p>Se você quiser acelerar esse retorno, pode me chamar agora no WhatsApp dizendo que já respondeu o diagnóstico:</p>
+            <p id="whatsappPitch">Quer o diagnóstico completo e o próximo passo pra sua loja? Me chama agora no WhatsApp:</p>
             <a class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"
                href="https://wa.me/5553999972327?text=Oi%20Igor,%20acabei%20de%20responder%20o%20diagn%C3%B3stico%20da%20minha%20loja%20de%20m%C3%B3veis%20planejados%20e%20quero%20entender%20os%20pr%C3%B3ximos%20passos.">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.617zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-              Falar comigo no WhatsApp
+              Falar com o Igor no WhatsApp
             </a>
+            <p class="secondary-note">Se preferir, também te retorno em até 24h pelo número que você deixou.</p>
           </div>
         </div>
       </div>
@@ -735,7 +790,7 @@
       // Campo condicional "Outro (descrever)" na Etapa 5
       var dorOutroField = document.getElementById("dorOutroField");
       var dorOutroText = document.getElementById("dorOutroText");
-      var dorStepEl = form.querySelector('[data-step="3"]');
+      var dorStepEl = document.getElementById("stepDor");
 
       var autoAdvanceTimer = null;
 
@@ -930,11 +985,9 @@
         if (!validateStep(state.current)) return;
         saveStep(state.current);
 
-        // Coletar dados de contato
+        // Coletar dados de contato (só nome + WhatsApp)
         state.respostas.nome = document.getElementById("nome").value.trim();
         state.respostas.whatsapp = document.getElementById("whatsapp").value.trim();
-        state.respostas.email = document.getElementById("email").value.trim();
-        state.respostas.instagram = document.getElementById("instagram").value.trim();
         state.respostas.desqualificado = state.desqualificado;
 
         // === INTEGRAÇÃO COM BACKEND ===
@@ -950,7 +1003,6 @@
           var phoneDigits = state.respostas.whatsapp.replace(/\D/g, "");
           var nomeParts = state.respostas.nome.split(/\s+/);
           fbq("init", META_PIXEL_ID, {
-            em: state.respostas.email,
             ph: phoneDigits ? "55" + phoneDigits.replace(/^55/, "") : undefined,
             fn: nomeParts[0] || undefined,
             ln: nomeParts.slice(1).join(" ") || undefined,
@@ -996,7 +1048,66 @@
         showConfirmation();
       });
 
+      // ----- Diagnóstico instantâneo (direcional, montado a partir das respostas) -----
+      function buildDiagnostico(r) {
+        var fat = r.faturamento || "";
+        var origem = r.origem || "";
+        var dor = r.dor || "";
+
+        var perfil = "Sua loja";
+        if (fat.indexOf("Até R$ 50") === 0) perfil = "Loja em estruturação";
+        else if (fat.indexOf("R$ 50 mil a") === 0) perfil = "Loja em crescimento";
+        else if (fat.indexOf("R$ 150 mil a") === 0) perfil = "Operação consolidada";
+        else if (fat.indexOf("Acima de R$ 300") === 0) perfil = "Operação de alta performance";
+
+        var titulo, para1;
+        if (origem === "Quase só indicação") {
+          titulo = "Hoje sua loja está no modo refém da indicação.";
+          para1 = "Depender quase só de indicação faz seu faturamento subir e descer sem que você controle. É por isso que alguns meses são ótimos e outros te deixam no aperto.";
+        } else if (origem === "Maioria por anúncios (Meta / Google)") {
+          titulo = "Você já investe — falta transformar contato em projeto fechado.";
+          para1 = "Como você já coloca dinheiro em anúncio, o gargalo não é gerar contato: é parar de atrair curioso e transformar esse investimento em projeto assinado.";
+        } else if (origem === "Tráfego de rua / parceria com construtora") {
+          titulo = "Sua captação hoje é reativa, não constante.";
+          para1 = "Depender de fluxo de rua e parceria pontual deixa sua agenda oscilando. Falta uma fonte de clientes que você liga e desliga quando quiser.";
+        } else {
+          titulo = "Você já diversifica, mas ainda falta previsibilidade.";
+          para1 = "Você começou a diversificar de onde vêm os clientes, mas ainda falta um sistema que traga projeto qualificado de forma constante, todo mês.";
+        }
+
+        var mirror;
+        if (dor === "Dependo demais de indicação") mirror = "nunca saber como vai ser o mês trava qualquer plano de crescimento e te mantém sempre reagindo.";
+        else if (dor === "Recebo muito curioso que some no orçamento") mirror = "o problema não é falta de contato, é falta de filtro — curioso consome o tempo do seu time e some na hora do orçamento.";
+        else if (dor === "Gasto com anúncio e fecho poucos projetos") mirror = "o dinheiro está indo pro anúncio e voltando pouco em projeto. Quase sempre isso é qualificação e processo comercial, não o anúncio em si.";
+        else if (dor === "Minha agenda comercial oscila muito") mirror = "agenda que vira e mexe fica vazia é sintoma de captação reativa — e isso dá pra eliminar com um fluxo constante.";
+        else mirror = "esse é exatamente o tipo de gargalo que um sistema de captação bem montado resolve.";
+
+        var para2 = "<strong>Você mesmo apontou:</strong> " + mirror;
+        var para3 = "Lojas no perfil da sua, quando montam um sistema de captação previsível, transformam a captação de reativa em constante e param de depender da sorte do mês. É isso que eu quero te mostrar no diagnóstico completo.";
+
+        return { perfil: perfil, titulo: titulo, paras: [para1, para2, para3] };
+      }
+
+      function renderDiagnostico() {
+        var d = buildDiagnostico(state.respostas);
+        document.getElementById("perfilBadge").textContent = d.perfil;
+        document.getElementById("resultTitulo").textContent = d.titulo;
+        var box = document.getElementById("resultParas");
+        box.innerHTML = "";
+        d.paras.forEach(function (html) {
+          var p = document.createElement("p");
+          p.innerHTML = html;
+          box.appendChild(p);
+        });
+
+        if (state.desqualificado) {
+          document.getElementById("whatsappPitch").textContent =
+            "Mesmo que anúncio não seja pra agora, dá pra melhorar bastante o que você já tem. Me chama no WhatsApp que eu te aponto os primeiros ajustes:";
+        }
+      }
+
       function showConfirmation() {
+        renderDiagnostico();
         formCard.classList.remove("is-visible");
         if (state.desqualificado) {
           disqualifiedNote.classList.add("show");
