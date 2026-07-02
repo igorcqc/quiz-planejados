@@ -19,7 +19,7 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     if (META_PIXEL_ID && META_PIXEL_ID.indexOf("SEU_PIXEL_ID") === -1) {
       fbq('init', META_PIXEL_ID);
-      fbq('track', 'PageView');
+      // PageView é disparado no script principal (com event_id) para deduplicar com a CAPI.
     }
   </script>
   <noscript>
@@ -602,7 +602,7 @@
     (function () {
       "use strict";
 
-      // ----- Tracking (UTMs, cliques de anúncio, cookies do Meta) -----
+      // ================= TRACKING (Pixel + CAPI espelhados) =================
       function getQueryParam(name) {
         return new URLSearchParams(window.location.search).get(name) || "";
       }
@@ -610,6 +610,22 @@
       function getCookie(name) {
         var match = document.cookie.match(new RegExp("(?:^| )" + name + "=([^;]+)"));
         return match ? decodeURIComponent(match[1]) : "";
+      }
+
+      function uuid() {
+        return (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : "id-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+      }
+
+      // ID estável do navegador, usado como external_id em todos os eventos (melhora o match).
+      function getBrowserId() {
+        var k = "leadBrowserId", v = "";
+        try {
+          v = localStorage.getItem(k) || "";
+          if (!v) { v = uuid(); localStorage.setItem(k, v); }
+        } catch (e) { v = v || uuid(); }
+        return v;
       }
 
       function buildTracking() {
@@ -624,17 +640,70 @@
         merged.landing_url = stored.landing_url || window.location.href;
         merged.referrer = stored.referrer !== undefined ? stored.referrer : document.referrer;
         merged.quiz_started_at = stored.quiz_started_at || null;
+        // Momento em que o fbclid foi visto (para reconstruir o fbc no servidor, se preciso).
+        merged.fbclid_ts = stored.fbclid_ts || (merged.fbclid ? Date.now() : null);
 
         sessionStorage.setItem("leadTracking", JSON.stringify(merged));
         return merged;
       }
 
       var tracking = buildTracking();
+      var browserId = getBrowserId();
       var answerLog = [];
 
       function fbTrack() {
         if (window.fbq) window.fbq.apply(window, arguments);
       }
+
+      // Identificadores disponíveis no momento (enviados junto de cada evento server-side).
+      function currentIdentifiers() {
+        return {
+          browser_id: browserId,
+          fbp: getCookie("_fbp"),
+          fbc: getCookie("_fbc"),
+          fbclid: tracking.fbclid || "",
+          fbclid_ts: tracking.fbclid_ts || null,
+          page_url: window.location.href,
+          user_agent: navigator.userAgent
+        };
+      }
+
+      // Espelho server-side (CAPI) via beacon — não bloqueia a navegação e sobrevive ao unload.
+      function serverTrack(eventName, eventId, customData) {
+        try {
+          var payload = {
+            event_name: eventName,
+            event_id: eventId,
+            event_time: Math.floor(Date.now() / 1000),
+            event_source_url: window.location.href,
+            custom_data: customData || {},
+            identifiers: currentIdentifiers()
+          };
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon("/api/track", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+          } else {
+            fetch("/api/track", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+              keepalive: true
+            }).catch(function () {});
+          }
+        } catch (e) {}
+      }
+
+      // Dispara o mesmo evento no Pixel (navegador) e na CAPI (servidor) com event_id compartilhado.
+      function trackEvent(kind, eventName, customData) {
+        var eventId = uuid();
+        if (kind === "track") fbTrack("track", eventName, customData || {}, { eventID: eventId });
+        else fbTrack("trackCustom", eventName, customData || {}, { eventID: eventId });
+        serverTrack(eventName, eventId, customData);
+        return eventId;
+      }
+
+      // Eventos de topo, ao carregar a página.
+      trackEvent("track", "PageView");
+      trackEvent("track", "ViewContent", { content_name: "Intro Diagnóstico Planejados" });
 
       // ----- Estado -----
       var state = {
@@ -679,7 +748,7 @@
 
         tracking.quiz_started_at = new Date().toISOString();
         sessionStorage.setItem("leadTracking", JSON.stringify(tracking));
-        fbTrack("trackCustom", "QuizStart");
+        trackEvent("trackCustom", "QuizStart");
       });
 
       // ----- Campo condicional da Etapa 5 -----
@@ -851,7 +920,7 @@
             valor: checked.value,
             respondido_em: new Date().toISOString()
           });
-          fbTrack("trackCustom", "QuizStepCompleted", { step: index + 1, campo: checked.name });
+          trackEvent("trackCustom", "QuizStepCompleted", { step_number: index + 1, step_field: checked.name });
         }
       }
 
@@ -869,19 +938,44 @@
         state.respostas.desqualificado = state.desqualificado;
 
         // === INTEGRAÇÃO COM BACKEND ===
-        // A função serverless em /api/notify-lead.js grava o lead no Supabase, notifica
-        // WhatsApp + e-mail, e reenvia o evento "Lead" pro Meta via Conversions API.
-        var eventId = (window.crypto && crypto.randomUUID)
-          ? crypto.randomUUID()
-          : "evt_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        // /api/notify-lead.js grava o lead no Supabase, notifica WhatsApp + e-mail e
+        // reenvia a conversão pro Meta via CAPI (Lead ou LeadDesqualificado), deduplicada
+        // com o Pixel pelo mesmo event_id.
+        var qualified = !state.desqualificado;
+        var leadEventId = uuid();
 
-        fbTrack("track", "Lead", { content_name: "Diagnóstico Móveis Planejados" }, { eventID: eventId });
+        // Advanced matching manual: alimenta o Pixel com os dados do lead (o Pixel hasheia
+        // no próprio navegador antes de enviar).
+        if (window.fbq) {
+          var phoneDigits = state.respostas.whatsapp.replace(/\D/g, "");
+          var nomeParts = state.respostas.nome.split(/\s+/);
+          fbq("init", META_PIXEL_ID, {
+            em: state.respostas.email,
+            ph: phoneDigits ? "55" + phoneDigits.replace(/^55/, "") : undefined,
+            fn: nomeParts[0] || undefined,
+            ln: nomeParts.slice(1).join(" ") || undefined,
+            external_id: browserId
+          });
+        }
+
+        var leadCustomData = {
+          content_name: "Diagnóstico Móveis Planejados",
+          faturamento: state.respostas.faturamento,
+          investimento: state.respostas.investimento,
+          qualificado: qualified ? "sim" : "nao"
+        };
+        if (qualified) fbTrack("track", "Lead", leadCustomData, { eventID: leadEventId });
+        else fbTrack("trackCustom", "LeadDesqualificado", leadCustomData, { eventID: leadEventId });
 
         var payload = state.respostas;
-        payload.event_id = eventId;
+        payload.event_id = leadEventId;
+        payload.qualificado = qualified;
         payload.tracking = Object.assign({}, tracking, {
+          browser_id: browserId,
           fbp: getCookie("_fbp"),
           fbc: getCookie("_fbc"),
+          fbclid: tracking.fbclid || "",
+          fbclid_ts: tracking.fbclid_ts || null,
           user_agent: navigator.userAgent,
           language: navigator.language,
           viewport: window.innerWidth + "x" + window.innerHeight,
