@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Diagnóstico gratuito de captação de clientes para lojas de móveis planejados. Descubra onde sua loja está perdendo oportunidades." />
   <title>Diagnóstico de Captação · Lojas de Móveis Planejados — Igor Pacheco</title>
+
+  <!-- Meta Pixel Code -->
+  <script>
+    var META_PIXEL_ID = "SEU_PIXEL_ID_AQUI";
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    if (META_PIXEL_ID && META_PIXEL_ID.indexOf("SEU_PIXEL_ID") === -1) {
+      fbq('init', META_PIXEL_ID);
+      fbq('track', 'PageView');
+    }
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1" />
+  </noscript>
+  <!-- End Meta Pixel Code -->
+
   <style>
     :root {
       --bg: #0c0d10;
@@ -580,6 +602,40 @@
     (function () {
       "use strict";
 
+      // ----- Tracking (UTMs, cliques de anúncio, cookies do Meta) -----
+      function getQueryParam(name) {
+        return new URLSearchParams(window.location.search).get(name) || "";
+      }
+
+      function getCookie(name) {
+        var match = document.cookie.match(new RegExp("(?:^| )" + name + "=([^;]+)"));
+        return match ? decodeURIComponent(match[1]) : "";
+      }
+
+      function buildTracking() {
+        var stored = {};
+        try { stored = JSON.parse(sessionStorage.getItem("leadTracking") || "{}"); } catch (e) {}
+
+        var params = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+        var merged = {};
+        params.forEach(function (key) {
+          merged[key] = getQueryParam(key) || stored[key] || "";
+        });
+        merged.landing_url = stored.landing_url || window.location.href;
+        merged.referrer = stored.referrer !== undefined ? stored.referrer : document.referrer;
+        merged.quiz_started_at = stored.quiz_started_at || null;
+
+        sessionStorage.setItem("leadTracking", JSON.stringify(merged));
+        return merged;
+      }
+
+      var tracking = buildTracking();
+      var answerLog = [];
+
+      function fbTrack() {
+        if (window.fbq) window.fbq.apply(window, arguments);
+      }
+
       // ----- Estado -----
       var state = {
         current: 0,
@@ -620,6 +676,10 @@
         formCard.classList.add("is-visible");
         window.scrollTo(0, 0);
         updateUI();
+
+        tracking.quiz_started_at = new Date().toISOString();
+        sessionStorage.setItem("leadTracking", JSON.stringify(tracking));
+        fbTrack("trackCustom", "QuizStart");
       });
 
       // ----- Campo condicional da Etapa 5 -----
@@ -784,6 +844,14 @@
           if (checked.name === "dor" && checked.value === "Outro") {
             state.respostas.dor_outro = dorOutroText.value.trim();
           }
+
+          answerLog.push({
+            step: index + 1,
+            campo: checked.name,
+            valor: checked.value,
+            respondido_em: new Date().toISOString()
+          });
+          fbTrack("trackCustom", "QuizStepCompleted", { step: index + 1, campo: checked.name });
         }
       }
 
@@ -801,9 +869,27 @@
         state.respostas.desqualificado = state.desqualificado;
 
         // === INTEGRAÇÃO COM BACKEND ===
-        // Notifica o WhatsApp do Igor a cada novo lead (função serverless em /api/notify-lead.js).
-        // Troque/complemente este bloco se quiser também gravar em planilha, CRM, etc.
+        // A função serverless em /api/notify-lead.js grava o lead no Supabase, notifica
+        // WhatsApp + e-mail, e reenvia o evento "Lead" pro Meta via Conversions API.
+        var eventId = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : "evt_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+
+        fbTrack("track", "Lead", { content_name: "Diagnóstico Móveis Planejados" }, { eventID: eventId });
+
         var payload = state.respostas;
+        payload.event_id = eventId;
+        payload.tracking = Object.assign({}, tracking, {
+          fbp: getCookie("_fbp"),
+          fbc: getCookie("_fbc"),
+          user_agent: navigator.userAgent,
+          language: navigator.language,
+          viewport: window.innerWidth + "x" + window.innerHeight,
+          page_url: window.location.href,
+          submitted_at: new Date().toISOString(),
+          answer_log: answerLog
+        });
+
         fetch("/api/notify-lead", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
