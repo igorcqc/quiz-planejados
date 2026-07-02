@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/diagnostico-planejados.html" }
+  ]
+}
