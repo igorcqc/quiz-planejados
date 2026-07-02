@@ -1,8 +1,9 @@
 // Handler do envio final do quiz. Dispara, em paralelo e de forma independente:
 //   1) gravação no Supabase (histórico completo + tracking jsonb + lead_status)
 //   2) notificação instantânea no Telegram do Igor
-//   3) notificação por e-mail via Resend (canal redundante)
-//   4) evento de conversão pro Meta via CAPI:
+//   3) notificação no WhatsApp via CallMeBot (canal redundante, pode atrasar)
+//   4) notificação por e-mail via Resend (canal redundante)
+//   5) evento de conversão pro Meta via CAPI:
 //        - "Lead" quando o lead é qualificado (evento de otimização)
 //        - "LeadDesqualificado" quando não é (público separado, não otimiza por ele)
 //      com user_data completo e o mesmo event_id do Pixel (dedup).
@@ -10,6 +11,7 @@
 //
 // Variáveis de ambiente necessárias no projeto Vercel:
 //   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID            -> notificação instantânea no Telegram
+//   CALLMEBOT_PHONE, CALLMEBOT_APIKEY               -> WhatsApp (CallMeBot, redundante)
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY         -> gravação no banco (tabela "leads")
 //   RESEND_API_KEY, LEAD_NOTIFY_EMAIL               -> e-mail (Resend)
 //   META_PIXEL_ID, META_CAPI_ACCESS_TOKEN           -> Meta Conversions API
@@ -38,9 +40,10 @@ export default async function handler(req, res) {
     "Qualificado: " + (data.desqualificado ? "Não" : "Sim")
   ];
 
-  const [supabaseResult, telegramResult, emailResult, metaResult] = await Promise.allSettled([
+  const [supabaseResult, telegramResult, whatsappResult, emailResult, metaResult] = await Promise.allSettled([
     saveToSupabase(data),
     notifyTelegram(resumoLinhas, data),
+    notifyWhatsapp(resumoLinhas),
     notifyEmail(resumoLinhas, data),
     sendLeadCapi(data, req)
   ]);
@@ -49,6 +52,7 @@ export default async function handler(req, res) {
     ok: true,
     supabase: settledToResult(supabaseResult),
     telegram: settledToResult(telegramResult),
+    whatsapp: settledToResult(whatsappResult),
     email: settledToResult(emailResult),
     meta_capi: settledToResult(metaResult)
   });
@@ -96,6 +100,25 @@ async function saveToSupabase(data) {
     throw new Error("Supabase respondeu " + resp.status + ": " + body);
   }
   return "lead salvo";
+}
+
+async function notifyWhatsapp(resumoLinhas) {
+  const phone = process.env.CALLMEBOT_PHONE;
+  const apikey = process.env.CALLMEBOT_APIKEY;
+  if (!phone || !apikey) throw new Error("CALLMEBOT_PHONE / CALLMEBOT_APIKEY ausentes");
+
+  const texto = ["Novo lead: Diagnóstico de Móveis Planejados", ""].concat(resumoLinhas).join("\n");
+  const url =
+    "https://api.callmebot.com/whatsapp.php?phone=" + encodeURIComponent(phone) +
+    "&text=" + encodeURIComponent(texto) +
+    "&apikey=" + encodeURIComponent(apikey);
+
+  const resp = await fetch(url);
+  const body = await resp.text();
+  if (/error/i.test(body) || /invalid/i.test(body)) {
+    throw new Error("CallMeBot retornou erro: " + body);
+  }
+  return body;
 }
 
 async function notifyTelegram(resumoLinhas, data) {
