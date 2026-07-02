@@ -53,6 +53,7 @@
 
     /* ---------- Header ---------- */
     header.site-header {
+      display: none;
       border-bottom: 1px solid var(--border);
       background: rgba(12, 13, 16, 0.7);
       backdrop-filter: blur(8px);
@@ -60,6 +61,7 @@
       top: 0;
       z-index: 20;
     }
+    header.site-header.is-visible { display: block; }
     .header-inner {
       display: flex;
       align-items: center;
@@ -93,7 +95,7 @@
 
     /* ---------- Intro ---------- */
     .intro {
-      min-height: calc(100svh - 75px);
+      min-height: 100svh;
       display: flex;
       align-items: center;
       padding: 28px 0;
@@ -192,6 +194,42 @@
     @keyframes rise {
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: none; }
+    }
+
+    /* Progress */
+    .progress {
+      margin-bottom: 26px;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .progress-meta .label {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .progress-meta .pct {
+      font-size: 13px;
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+    .progress-bar {
+      height: 6px;
+      width: 100%;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      border-radius: 999px;
+      transition: width 0.35s ease;
     }
 
     /* Steps */
@@ -414,7 +452,7 @@
 <body>
 
   <!-- ===================== HEADER ===================== -->
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <div class="container header-inner">
       <div class="brand-mark">IP</div>
       <div class="brand-text">
@@ -440,6 +478,15 @@
     <section class="form-section">
       <div class="container">
         <div class="form-card" id="formCard">
+          <!-- Progress -->
+          <div class="progress">
+            <div class="progress-meta">
+              <span class="label" id="progressLabel">Etapa 1 de 6</span>
+              <span class="pct" id="progressPct">17%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
+
           <form id="quizForm" novalidate>
             <!-- ETAPA 2 -->
             <div class="step is-active" data-step="0">
@@ -594,6 +641,7 @@
       };
 
       // ----- Elementos -----
+      var siteHeader = document.getElementById("siteHeader");
       var introSection = document.getElementById("introSection");
       var startBtn = document.getElementById("startBtn");
       var formCard = document.getElementById("formCard");
@@ -605,6 +653,10 @@
       var nextBtn = document.getElementById("nextBtn");
       var submitBtn = document.getElementById("submitBtn");
       var navSpacer = document.getElementById("navSpacer");
+
+      var progressLabel = document.getElementById("progressLabel");
+      var progressPct = document.getElementById("progressPct");
+      var progressFill = document.getElementById("progressFill");
 
       var confirmation = document.getElementById("confirmation");
       var disqualifiedNote = document.getElementById("disqualifiedNote");
@@ -619,6 +671,7 @@
       // ----- Intro: esconder a etapa 1 e mostrar o formulário -----
       startBtn.addEventListener("click", function () {
         introSection.style.display = "none";
+        siteHeader.classList.add("is-visible");
         formCard.classList.add("is-visible");
         window.scrollTo(0, 0);
         updateUI();
@@ -715,6 +768,12 @@
         var onDorStep = steps[state.current] === dorStepEl;
         var dorOutroChecked = dorStepEl.querySelector('input[name="dor"][value="Outro"]:checked');
         nextBtn.style.display = (!isLast && onDorStep && dorOutroChecked) ? "inline-flex" : "none";
+
+        var stepNumber = state.current + 1;
+        var pct = Math.round((stepNumber / totalSteps) * 100);
+        progressLabel.textContent = "Etapa " + stepNumber + " de " + totalSteps;
+        progressPct.textContent = pct + "%";
+        progressFill.style.width = pct + "%";
       }
 
       // ----- Validação -----
