@@ -93,8 +93,12 @@
 
     /* ---------- Intro ---------- */
     .intro {
-      padding: 64px 0 48px;
+      min-height: calc(100svh - 75px);
+      display: flex;
+      align-items: center;
+      padding: 28px 0;
     }
+    .intro-inner { width: 100%; }
     .eyebrow {
       display: inline-block;
       font-size: 12.5px;
@@ -105,47 +109,27 @@
       background: var(--accent-soft);
       padding: 6px 12px;
       border-radius: 999px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
     .intro h2 {
-      font-size: clamp(28px, 5.2vw, 40px);
-      line-height: 1.15;
+      font-size: clamp(24px, 5.4vw, 38px);
+      line-height: 1.16;
       letter-spacing: -0.02em;
       font-weight: 700;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
     .intro h2 .hl { color: var(--accent-strong); }
     .intro p {
       color: var(--text-muted);
-      font-size: 16.5px;
+      font-size: clamp(14.5px, 2.4vw, 16.5px);
       margin-bottom: 18px;
-      max-width: 62ch;
+      max-width: 56ch;
     }
     .intro .lead { color: var(--text); }
-    .intro ul.dashes {
-      list-style: none;
-      margin: 0 0 18px;
-      padding: 0;
-    }
-    .intro ul.dashes li {
-      position: relative;
-      padding-left: 22px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      font-size: 16px;
-    }
-    .intro ul.dashes li::before {
-      content: "—";
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-    }
     .intro .note {
-      font-size: 15px;
+      font-size: 13.5px;
       color: var(--text-faint);
-      border-left: 2px solid var(--border-strong);
-      padding-left: 16px;
-      margin-top: 28px;
+      margin-top: 14px;
     }
 
     /* ---------- Buttons ---------- */
@@ -208,42 +192,6 @@
     @keyframes rise {
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: none; }
-    }
-
-    /* Progress */
-    .progress {
-      margin-bottom: 26px;
-    }
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-    }
-    .progress-meta .label {
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-    .progress-meta .pct {
-      font-size: 13px;
-      color: var(--accent-strong);
-      font-weight: 600;
-    }
-    .progress-bar {
-      height: 6px;
-      width: 100%;
-      background: var(--surface-2);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
-      border-radius: 999px;
-      transition: width 0.35s ease;
     }
 
     /* Steps */
@@ -478,23 +426,13 @@
 
   <main>
     <!-- ===================== ETAPA 1 — INTRO ===================== -->
-    <section class="intro">
-      <div class="container">
-        <span class="eyebrow">Diagnóstico · Móveis Planejados</span>
-        <h2>Tenha um sistema de captação de clientes para a sua <span class="hl">loja de móveis planejados</span>.</h2>
-
-        <p class="lead">Em vez de depender só de indicação ou de anúncios cheios de curioso, vamos entender:</p>
-        <ul class="dashes">
-          <li>quanto sua loja poderia estar vendendo a mais</li>
-          <li>onde você está perdendo oportunidades hoje</li>
-          <li>e se faz sentido implementar um sistema de clientes na sua realidade.</li>
-        </ul>
-
-        <p>Em 3 a 5 minutos, você responde a algumas perguntas simples sobre a sua loja. Com isso, eu já consigo enxergar o cenário da sua captação hoje e te mostrar como funciona um sistema de clientes pensado pra realidade de planejados.</p>
-
-        <p class="note">Pensado para donos e gestores de lojas de móveis planejados que estão cansados de viver só de indicação e atender curioso no WhatsApp.</p>
-
+    <section class="intro" id="introSection">
+      <div class="container intro-inner">
+        <span class="eyebrow">Diagnóstico Gratuito · Móveis Planejados</span>
+        <h2>Pare de depender só de indicação. Tenha um <span class="hl">sistema de captação de clientes</span> na sua loja de planejados.</h2>
+        <p class="lead">Responda 6 perguntas rápidas e descubra onde sua loja está perdendo vendas — e se faz sentido montar um sistema de clientes agora.</p>
         <button class="btn btn-primary btn-cta-intro" id="startBtn">Quero clientes qualificados</button>
+        <p class="note">Leva menos de 3 minutos.</p>
       </div>
     </section>
 
@@ -502,15 +440,6 @@
     <section class="form-section">
       <div class="container">
         <div class="form-card" id="formCard">
-          <!-- Progress -->
-          <div class="progress">
-            <div class="progress-meta">
-              <span class="label" id="progressLabel">Etapa 1 de 6</span>
-              <span class="pct" id="progressPct">17%</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-          </div>
-
           <form id="quizForm" novalidate>
             <!-- ETAPA 2 -->
             <div class="step is-active" data-step="0">
@@ -665,6 +594,7 @@
       };
 
       // ----- Elementos -----
+      var introSection = document.getElementById("introSection");
       var startBtn = document.getElementById("startBtn");
       var formCard = document.getElementById("formCard");
       var form = document.getElementById("quizForm");
@@ -676,25 +606,22 @@
       var submitBtn = document.getElementById("submitBtn");
       var navSpacer = document.getElementById("navSpacer");
 
-      var progressLabel = document.getElementById("progressLabel");
-      var progressPct = document.getElementById("progressPct");
-      var progressFill = document.getElementById("progressFill");
-
       var confirmation = document.getElementById("confirmation");
       var disqualifiedNote = document.getElementById("disqualifiedNote");
 
       // Campo condicional "Outro (descrever)" na Etapa 5
       var dorOutroField = document.getElementById("dorOutroField");
       var dorOutroText = document.getElementById("dorOutroText");
+      var dorStepEl = form.querySelector('[data-step="3"]');
 
-      // ----- Intro: mostrar o formulário -----
+      var autoAdvanceTimer = null;
+
+      // ----- Intro: esconder a etapa 1 e mostrar o formulário -----
       startBtn.addEventListener("click", function () {
+        introSection.style.display = "none";
         formCard.classList.add("is-visible");
+        window.scrollTo(0, 0);
         updateUI();
-        // scroll automático até o início do form (bônus)
-        setTimeout(function () {
-          formCard.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 60);
       });
 
       // ----- Campo condicional da Etapa 5 -----
@@ -708,11 +635,25 @@
         });
       });
 
-      // ----- Esconder erro ao selecionar uma opção -----
+      // ----- Esconder erro + auto-avançar ao selecionar uma opção -----
       form.querySelectorAll('input[type="radio"]').forEach(function (input) {
         input.addEventListener("change", function () {
           var err = form.querySelector('.step-error[data-error-for="' + this.name + '"]');
           if (err) err.classList.remove("show");
+
+          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+
+          // Etapa "dor" com "Outro" selecionado: não avança sozinho,
+          // dá tempo do lead escrever antes de clicar em Próximo.
+          var isDorOutro = this.name === "dor" && this.value === "Outro";
+          if (isDorOutro) {
+            nextBtn.style.display = "inline-flex";
+            return;
+          }
+
+          autoAdvanceTimer = setTimeout(function () {
+            advanceStep();
+          }, 380);
         });
       });
 
@@ -738,15 +679,18 @@
       });
 
       // ----- Navegação -----
-      nextBtn.addEventListener("click", function () {
+      function advanceStep() {
         if (!validateStep(state.current)) return;
         saveStep(state.current);
         if (state.current < totalSteps - 1) {
           goTo(state.current + 1);
         }
-      });
+      }
+
+      nextBtn.addEventListener("click", advanceStep);
 
       backBtn.addEventListener("click", function () {
+        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
         if (state.current > 0) goTo(state.current - 1);
       });
 
@@ -764,14 +708,13 @@
 
         backBtn.style.display = isFirst ? "none" : "inline-flex";
         navSpacer.style.display = isFirst ? "block" : "none";
-        nextBtn.style.display = isLast ? "none" : "inline-flex";
         submitBtn.style.display = isLast ? "inline-flex" : "none";
 
-        var stepNumber = state.current + 1;
-        var pct = Math.round((stepNumber / totalSteps) * 100);
-        progressLabel.textContent = "Etapa " + stepNumber + " de " + totalSteps;
-        progressPct.textContent = pct + "%";
-        progressFill.style.width = pct + "%";
+        // O botão "Próximo" só aparece na etapa "dor" quando "Outro" já
+        // está selecionado (etapas de múltipla escolha avançam sozinhas).
+        var onDorStep = steps[state.current] === dorStepEl;
+        var dorOutroChecked = dorStepEl.querySelector('input[name="dor"][value="Outro"]:checked');
+        nextBtn.style.display = (!isLast && onDorStep && dorOutroChecked) ? "inline-flex" : "none";
       }
 
       // ----- Validação -----
@@ -853,11 +796,17 @@
         state.respostas.instagram = document.getElementById("instagram").value.trim();
         state.respostas.desqualificado = state.desqualificado;
 
-        // === PONTO DE INTEGRAÇÃO COM BACKEND ===
-        // Aqui você pode enviar `payload` para sua API, webhook, planilha, CRM, etc.
+        // === INTEGRAÇÃO COM BACKEND ===
+        // Notifica o WhatsApp do Igor a cada novo lead (função serverless em /api/notify-lead.js).
+        // Troque/complemente este bloco se quiser também gravar em planilha, CRM, etc.
         var payload = state.respostas;
-        console.log("Diagnóstico (payload pronto para envio):", payload);
-        // Ex.: fetch("/api/diagnostico", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+        fetch("/api/notify-lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }).catch(function (err) {
+          console.error("Falha ao notificar novo lead:", err);
+        });
         // =======================================
 
         showConfirmation();
