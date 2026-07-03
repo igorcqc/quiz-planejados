@@ -403,6 +403,16 @@
       margin: 6px 0 20px;
     }
     .confirmation .disqualified-note.show { display: block; }
+    .confirmation .disqualified-note p { margin-bottom: 12px; }
+    .confirmation .disqualified-note p:last-child { margin-bottom: 0; }
+    .fac-block {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-strong);
+    }
+    .fac-block p { margin-bottom: 12px; }
+    .fac-block .btn { width: 100%; margin-top: 4px; }
     .whatsapp-block {
       margin-top: 26px;
       padding-top: 24px;
@@ -570,10 +580,10 @@
     <section class="intro" id="introSection">
       <div class="container intro-inner">
         <span class="eyebrow">Diagnóstico Gratuito · Planejados e Sob Medida</span>
-        <h2>Quer mais projetos fechados e menos curioso no WhatsApp?<br />Comece pelo <span class="hl">diagnóstico</span> da sua loja de planejados.</h2>
-        <p class="lead">Responda 6 perguntas rápidas e receba na hora um diagnóstico da captação da sua loja, mais o caminho pra ter projeto fechado todo mês, em vez de só orçamento que some.</p>
+        <h2>Chega de <span class="hl">curioso</span> que pede orçamento e some.</h2>
+        <p class="lead">Em menos de 1 minuto, você vê onde sua loja está perdendo projetos e dinheiro todo mês. Descubra o caminho pra ter projetos fechados de forma previsível, em vez de só orçamento que some.</p>
         <button class="btn btn-primary btn-cta-intro" id="startBtn">Quero clientes qualificados</button>
-        <p class="note">Leva menos de 1 minuto. Sem compromisso.</p>
+        <p class="note">Diagnóstico gratuito · leva menos de 1 minuto · sem compromisso.</p>
         <!-- PROVA SOCIAL (verdadeira): verba gerenciada + foco no nicho -->
         <div class="proof">
           <span class="proof-dot"></span>
@@ -599,7 +609,7 @@
           <form id="quizForm" novalidate>
             <!-- ETAPA 1 — DOR (abre com identificação) -->
             <div class="step is-active" data-step="0" id="stepDor">
-              <h3>O que mais te incomoda na sua loja de planejados hoje?</h3>
+              <h3>O que mais te incomoda e tira dinheiro da sua loja de planejados hoje?</h3>
               <div class="options">
                 <label class="option"><input type="radio" name="dor" value="Dependo demais de indicação" /><span class="dot"></span><span class="opt-label">Dependo demais de indicação</span></label>
                 <label class="option"><input type="radio" name="dor" value="Recebo muito curioso que some no orçamento" /><span class="dot"></span><span class="opt-label">Recebo muito curioso que some no orçamento</span></label>
@@ -641,8 +651,8 @@
 
             <!-- ETAPA 4 — INVESTIMENTO (qualificação) -->
             <div class="step" data-step="3" id="stepInvestimento">
-              <h3>Quanto você consegue investir em anúncios por mês hoje?</h3>
-              <p class="step-help tight">Facebook, Instagram e Google.</p>
+              <h3>Quanto você está disposto(a) a investir de forma séria em anúncios por mês hoje?</h3>
+              <p class="step-help tight">(Facebook, Instagram e Google)</p>
               <div class="options">
                 <label class="option"><input type="radio" name="investimento" value="Até R$ 1.000/mês" /><span class="dot"></span><span class="opt-label">Até R$ 1.000/mês</span></label>
                 <label class="option"><input type="radio" name="investimento" value="R$ 1.000 a R$ 3.000/mês" /><span class="dot"></span><span class="opt-label">R$ 1.000 a R$ 3.000/mês</span></label>
@@ -706,24 +716,30 @@
 
           <!-- Oferta (só para leads qualificados) -->
           <div class="offer" id="offerBlock">
-            <h4 class="offer-title">Como a gente resolve isso na sua loja</h4>
-            <p class="offer-lead">Eu monto e opero um <strong>sistema de captação completo</strong> pra sua loja de planejados: anúncios, página de captura e qualificação de curioso — do clique até o projeto chegar na sua mesa. Você foca em fechar; trazer cliente qualificado é comigo.</p>
+            <h4 class="offer-title">Como eu transformo anúncio em projeto fechado na sua loja</h4>
+            <p class="offer-lead">Eu não faço "gestão de tráfego".</p>
+            <p class="offer-lead">Eu monto e opero um <strong>sistema de clientes</strong> pra sua loja de planejados: do anúncio até o projeto na sua mesa. É um fluxo inteiro pensado pra atrair quem tem obra e verba, filtrar curioso, e deixar a sua equipe falando só com quem tem perfil pra fechar.</p>
             <ul class="offer-list">
-              <li>Anúncios no Meta e Google criados e gerenciados por mim</li>
-              <li>Funil de captação que filtra curioso e traz quem quer comprar</li>
-              <li>Qualificação pra sua equipe só falar com quem tem perfil</li>
-              <li>Otimização e acompanhamento toda semana</li>
+              <li>Anúncios no Meta e Google criados e gerenciados por mim, focados em quem está com obra, reforma ou mudança, não em curioso</li>
+              <li>Funil de captação que filtra curioso antes de chegar em você e traz só quem tem real intenção de comprar planejados</li>
+              <li>Qualificação dos leads pra sua equipe gastar tempo só com quem tem perfil, prazo e orçamento</li>
+              <li>Otimização e acompanhamento toda semana, ajustando campanhas e processo comercial pra aumentar projetos fechados, não só leads</li>
             </ul>
             <div class="offer-guarantee">
-              <strong>🛡️ Minha garantia</strong>
-              <span>Fechamos 3 meses. Se até o fim do 2º mês você não tiver fechado pelo menos 3 projetos vindos da captação que eu montar, o 3º mês é por minha conta.</span>
+              <strong>🛡️ Minha garantia Projeto Fechado</strong>
+              <span>Fechamos 3 meses. Se até o fim do 2º mês você não tiver fechado pelo menos 3 projetos vindos das oportunidades que eu gerar, o 3º mês eu opero de graça. Ou seja: ou esse sistema começa a trazer projeto fechado pra sua loja, ou eu trabalho um mês inteiro sem você pagar o fee.</span>
             </div>
-            <p class="offer-scarcity">Estou pegando só <strong>3 lojas por mês</strong> pra garantir resultado em cada uma.</p>
+            <p class="offer-scarcity">Estou pegando só <strong>3 lojas de planejados por mês</strong> pra implementar o sistema completo Projeto Fechado e garantir resultado em cada uma. Quando as 3 vagas do mês fecham, eu só abro novamente no próximo ciclo.</p>
           </div>
 
           <div class="disqualified-note" id="disqualifiedNote">
-            Pelo que você respondeu, hoje não parece ser o momento ideal para um sistema completo de captação por anúncios.
-            Ainda assim, dá pra melhorar bastante o que você já tem, e é isso que eu vou te mostrar.
+            <p>Pelo que você respondeu, hoje não parece ser o momento ideal pra montar o sistema completo de clientes na sua loja.</p>
+            <p>Ainda assim, dá pra melhorar muito o que você já tem — principalmente na forma como você filtra e atende os clientes — e é isso que eu vou te mostrar agora.</p>
+            <div class="fac-block" id="facBlock">
+              <p>Se hoje você não quer investir em anúncios, o melhor passo é parar de perder tempo com quem não vai fechar.</p>
+              <p>É exatamente isso que eu ensino no <strong>Método Filtro Anti-Curioso</strong> — um sistema simples pra filtrar curiosos e aumentar seus fechamentos, mesmo só com indicação e orgânico.</p>
+              <a class="btn btn-primary" id="facBtn" href="https://igorpachecoads.com.br/fac/" target="_blank" rel="noopener noreferrer">Conhecer o Método Filtro Anti-Curioso</a>
+            </div>
           </div>
 
           <div class="whatsapp-block">
@@ -1194,18 +1210,21 @@
         });
 
         var offerBlock = document.getElementById("offerBlock");
+        var facBlock = document.getElementById("facBlock");
         var pitch = document.getElementById("whatsappPitch");
         var btnLabel = document.getElementById("whatsappBtnLabel");
 
         if (state.desqualificado) {
-          // Desqualificado: não mostra a oferta completa, vai numa abordagem suave.
+          // Desqualificado: oculta a oferta do sistema Projeto Fechado e mostra o FAC.
           offerBlock.classList.remove("is-visible");
+          facBlock.style.display = "block";
           pitch.textContent =
             "Mesmo que anúncio não seja pra agora, dá pra melhorar bastante o que você já tem. Me chama no WhatsApp que eu te aponto os primeiros ajustes:";
           btnLabel.textContent = "Falar com o Igor no WhatsApp";
         } else {
-          // Qualificado: mostra a oferta + convida pra call de diagnóstico.
+          // Qualificado: mostra a oferta do sistema Projeto Fechado, sem o FAC.
           offerBlock.classList.add("is-visible");
+          facBlock.style.display = "none";
           pitch.textContent =
             "Quer montar esse sistema na sua loja? Me chama no WhatsApp que a gente agenda sua call de diagnóstico gratuita:";
           btnLabel.textContent = "Agendar minha call no WhatsApp";
